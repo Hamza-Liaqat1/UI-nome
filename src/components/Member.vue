@@ -168,7 +168,7 @@ import { getAddress, sendBtcTransaction } from 'sats-connect';
 // import sha256 from 'crypto-js/sha256';
 import { event } from 'vue-gtag'
 import imageCompressor from 'vue-image-compressor'
-import {available_rarity} from "../constants/rarity"
+import { available_rarity } from '@/constants/rarity';
 export default {
   name: 'Home',
   data() {
