@@ -16,7 +16,8 @@
     "vue-analytics": "^5.22.1",
     "vue-gtag": "^2.0.1",
     "vue-image-compressor": "^1.0.3",
-    "vue-image-upload-resize": "^2.3.0"
+    "vue-image-upload-resize": "^2.3.0",
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",

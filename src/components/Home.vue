@@ -1,1247 +1,326 @@
 <template>
-  <div class="">
-    <div class="page-wrapper">
-      <div
-        v-if="ispopUp"
-        style="overflow-y: scroll; z-index: 99"
-        class="position-fixed top-0 left-0 bg-black bg-opacity-80 w-screen h-screen flex items-center justify-center z-50"
-      >
-        <div
-          class="bg-white col-11 col-sm-9 col-lg-4 col-xl-3 md:rounded-md py-2 relative shadow-md"
-        >
-          <span
-            @click="changePopup(!ispopUp)"
-            class="absolute right-4 top-3 font-bold cursor-pointer text-gray-800"
-            >X</span
-          >
-          <div class="px-3 border-b pb-4">
-            <h2 class="text-xl font-bold">Choose your wallet</h2>
-          </div>
-          <ul class="flex flex-col">
-            <!--          <p class="px-3 mt-2 mb-0.5 text-gray-700 font-bold text-sm">Browser Extensions</p>-->
-            <li
-              @click="waitXV"
-              class="flex justify-between items-center cursor-pointer hover:bg-gray-100 px-4 h-14 relative"
-            >
-              <div class="flex items-center gap-3">
-                <img
-                  src="../assets/images/xverse.png"
-                  class="h-7 w-7 rounded-full object-cover"
-                  alt=""
-                />
-                <div class="flex flex-col relative">
-                  <p class="inline-block font-bold leading-5 text-gray-900">
-                    Xverse
-                  </p>
-                </div>
-              </div>
-              <span class="err" v-if="!isXV">Install Xverse wallet</span>
-            </li>
-
-            <!--          <li @click="waitHero" class="flex justify-between items-center cursor-pointer  hover:bg-gray-100 px-4 h-14 relative">-->
-            <!--            <div class="flex items-center gap-3"><img src="../assets/images/hiro.png" class="h-7 w-7 rounded-full object-cover" alt="">-->
-            <!--              <div class="flex flex-col relative"><p class="inline-block font-bold leading-5 text-gray-900">Hiro Wallet </p></div>-->
-            <!--            </div><span class="err" v-if="!isHero"> soon</span></li>-->
-
-            <!--          <li @click="waitUN" class="flex justify-between items-center cursor-pointer  hover:bg-gray-100 px-4 h-14 relative">-->
-            <!--            <div class="flex items-center gap-3"><img src="../assets/images/unisat.png" class="h-7 w-7 rounded-full object-cover" alt="">-->
-            <!--              <div class="flex flex-col relative"><p class="inline-block font-bold leading-5 text-gray-900">Unisat</p></div></div>-->
-            <!--            <span class="err" v-if="!isUnis"> soon</span></li>-->
-          </ul>
-        </div>
+  <div class="page-wrapper">
+    <div class="header">
+      <div class="logo"><img src="../assets/images/logo-blank.png" /></div>
+      <img src="../assets/images/logo-blank.png" />
+      <div class="menu-item projects-menu-item desktop-only">
+        <div class="menu-link">About</div>
       </div>
-
-      <div class="header d-flex justify-content-between">
-        <div>
-          <a href="/">
-            <!--       <div style="" class="nome-logo headerLogo animate-big">NōME</div>-->
-            <img
-              class="headerLogo animate-big"
-              src="../assets/images/logo_white.png"
-            />
-          </a>
-        </div>
-
+      <div class="menu-item contact-menu-item">
         <div class="menu-link">
-          <a class="" target="_blank" href="https://nome.wtf/"
-            ><div class="menu-link-txt animate-big">nome.wft</div></a
-          >
-        </div>
+          <a href="/art">Art</a></div>
       </div>
-      <main>
-        <div class="intro">
-          <h1 class="intro-title">• Open-Source tool •</h1>
-          <div class="intro-box mt-md-0 mt-5 w-100 position-relative">
-            <div class="intro-line-title text-center">
-              Resize <br />
-              and Inscribe <br />
-              Animations
-            </div>
-          </div>
-        </div>
-        <!--      <div class="pt-5"></div>-->
-
-        <div class="col-sm-6 p-0 mx-width col-12 mt-5">
-          This tool is created for you to enjoy the possibilities of Bitcoin
-          Ordinals. To created animation, follow the steps:
-          <br /><br />
-          1. Upload PNG or JPEG frames (10 Max)
-          <br />
-          2. Set order, timing , and .webp files size
-          <br />
-          3. Generate GIF, set quantity and rarity
-          <br />
-          4. Inscribe frames + recursive GIFs
-        </div>
-
-        <div class="pt-4"></div>
-
-        <div class="col-12 p-0 col-sm-6 d-flex justify-content-start mt-3">
-          <a
-            @click="upload"
-            class="btn-txt text-center animate-big btn-connect"
-          >
-            UPLOAD FRAMES
-          </a>
-        </div>
-
-        <div align="center">
-          <!--        <button class="upload-button button" type="button" @click="upload">Add Picture</button>-->
-          <image-compressor
-            :scale="scale"
-            class="compressor"
-            :done="getFiles"
-            :quality="quality"
-            ref="compressor"
-          ></image-compressor>
-
-          <div class="w-100 d-flex flex-wrap">
-            <div
-              v-for="(item, index) in files"
-              class="col-12 col-sm-6 col-md-4 col-lg-3"
-            >
-              <img class="w-100" :src="item.img" />
-              <div class="image-info d-flex">
-                <b>Before: </b>
-                <span>{{ item.original.size }}</span>
-                <span class="separator"> | </span>
-                <b>After: </b>
-                <span>{{
-                  item.compressed.size == "0 kB" ||
-                  item.original.file.size < item.compressed.file.size
-                    ? item.original.size
-                    : item.compressed.size
-                }}</span>
-              </div>
-              <a :href="item.img" class="button" target="_blank">Download</a>
-            </div>
-            <div
-              style="min-height: 200px"
-              v-if="files.length == 0"
-              class="col-12 frame-box col-sm-6 col-md-4 col-lg-3"
-            ></div>
-          </div>
-
-          <div class="text-center" v-if="img">
-            <img
-              v-if="img"
-              src=""
-              alt=""
-              :style="{ maxWidth: originalSize ? '100%' : null }"
-              :src="img"
-            />
-            <a :href="img" class="button" target="_blank">Download</a>
-          </div>
-        </div>
-        <div class="w-100 d-flex flex-wrap">
-          <div class="col-12 col-sm-6 p-0 d-flex justify-content-start mt-3">
-            <a
-              @click="generateGIF"
-              class="btn-txt text-center animate-big btn-connect"
-            >
-              GENERATE GIF
-            </a>
-          </div>
-          <div class="col-12 col-sm-6">
-            <div
-              class="input-group d-flex flex-column justify-content-start col-12"
-            >
-              <label>Image Quality</label>
-              <input type="range" v-model="quality" min="1" max="100" />
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="d-flex w-100 flex-wrap">
-            <div
-              class="col-12 col-sm-6 flex-fill frame-box d-flex align-items-center justify-content-center"
-            >
-              <div class="h-100 w-100" style="margin: 0px; isolation: isolate">
-                <div class="grid-container p-3 h-100 w-100">
-                  <div
-                    :style="{ backgroundImage: `url(${item.img})` }"
-                    class="grid-item"
-                    v-for="(item, index) in files"
-                    v-show="currentInDisplay == index"
-                  ></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-sm-6">
-              <div class="col-12">
-                <div class="input-title mt-3">GIF Quantity</div>
-                <input
-                  type="number"
-                  v-model="quantity"
-                  style="color: white"
-                  class="input-box text-left"
-                />
-                <div class="input-title mt-4">Rarity</div>
-              </div>
-
-              <div class="d-flex flex-wrap">
-                <div
-                  v-for="(item, index) in rarity"
-                  :key="index"
-                  class="col-6 p-3 text-center"
-                >
-                  <div
-                    @click="selectedRar = index"
-                    :class="index == selectedRar ? 'selected-input-box' : ''"
-                    class="input-box cursor-pointer text-uppercase"
-                  >
-                    {{ item }}
-                  </div>
-                </div>
-              </div>
-              <div
-                v-if="files.length != 0"
-                class="d-flex mt-3 justify-between col-12 detail"
-              >
-                <div>Frames</div>
-                <div>{{ files.length * quantity }}</div>
-              </div>
-              <div
-                v-if="files.length != 0"
-                class="d-flex justify-between col-12 detail"
-              >
-                <div>Total items</div>
-                <div>{{ (files.length + 1) * quantity }}</div>
-              </div>
-              <div
-                v-if="files.length != 0"
-                class="d-flex justify-between col-12 detail"
-              >
-                <div>Final BTC price</div>
-                <div>{{ (files.length + 1) * 0.01 * quantity }}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="w-100 d-flex flex-wrap">
-            <div class="col-12 col-sm-6">
-              <!--      <div class="col-12 text-left input-title mt-3">Thank you</div>-->
-              <!--      <div class="col-12 text-left input-title">Link to transaction</div>-->
-            </div>
-
-            <div class="col-12 col-sm-6">
-              <div>
-                <div class="d-flex justify-content-center pt-5">
-                  <a
-                    @click="changePopup(true)"
-                    class="btn-txt text-center animate-big btn-connect"
-                  >
-                    INSCRIBE
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
+      <div class="menu-item servises-menu-item">
+        <div class="menu-link"><a href="/design">Design</a></div>
+      </div>
     </div>
+    <main>
+      <div class="content">
+        <div class="intro">
+          <br />
+          <h1>• ARTIST &amp; FOUNDER •</h1>
+          <div class="side-column-box">
+            <div class="side-column">
+              <h2>
+                Based in <br />
+                US <br />
+                Los Angeles
+              </h2>
+              <!--.social-links     div
+  a(href=" https://www.twitter.com/nome_nft/" target="_blank") Twitter 
+div
+  a(href="https://www.instagram.com/nome.nft/" target="_blank") Instagram   
+.photo
+ <br><br><br>
+  img(src="images/main/022.png")
 
-    <div class="footer">
-      <div class="intro mt-5 pt-5">
-        <!--    <h1 class="intro-title">I AM NOME</h1>-->
-        <div class="intro-box pt-2 mt-md-0 mt-5 w-100 position-relative">
-          <div class="intro-line-title intro-line-title-f text-center">
-            <div class="animate-big">
-              <a
-                class="menu-link-txt-footer"
-                target="_blank"
-                href="https://twitter.com/nome_nft"
-              >
-                Twitter</a
-              >
+  <br><br><br>-->
             </div>
+          </div>
+          <div class="text">
+            <p>Gm, I am an Artist and Founder of the NōME brand.</p>
+            <br /><br /><br />
+            <h3>NōME → NO ME</h3>
+            <p>
+              The brand name translates as "no me", emphasizing the absence of
+              oneself. I founded NōME in Stockholm, Sweden in 2016 year, and it
+              became a collectible design studio with a focus on sustainability
+              and innovation. NōME luxury 1/1 furniture and home objects were
+              showcased in galleries and museums in London, Milan, Copenhagen,
+              Stockholm, and Los Angeles.
+            </p>
+          </div>
+          <div class="text">
+            <p>
+              In 2021, I transitioned from my physical design business to
+              digital crypto art, exploring the principles of decentralization
+              and creative freedom. To preserve the legacy and keep art
+              immutable, I created "NOME ART" – the first 1/1 Ordinals
+              collection inscribed on the Bitcoin blockchain. The collection
+              pieces were a part of the first Ordinals exhibitions at Miami Art
+              Bassel and W Los Angeles in Beverly Hills.
+            </p>
+            <br /><br />
+          </div>
+          <div class="text">
+            <h3>COLLECTIONS</h3>
+          </div>
+          <div class="link">
+            <div>
+              <a href=" https://magiceden.io/ordinals/marketplace/nomeart" target="_blank">"NOME ART" – BITCOIN
+              </a>
+            </div>
+          </div>
+          <div class="link">
+            <div>
+              <a href=" https://foundation.app/@nome?tab=created" target="_blank">"NōME NFT" – ETHEREUM
+              </a>
+            </div>
+            <br /><br /><br />
+          </div>
+          <div class="text">
+            <h3>AWARDS</h3>
+            <p>
+              Gamma + Mintery NFT — Contest winner, 2023 July, W Los Angeles,
+              Beverly Hills, US
+            </p>
+            <p>
+              Bitcoin Startup Lab — The winner of Bitcoin Olympics Hackathon,
+              April 16, 2023, US
+            </p>
+            <p>
+              Furniture Fair — «Rising star» nomination, 2018 February,
+              Stockholm, SW
+            </p>
+            <p>
+              Salone Del Mobile — SaloneSatellite Moscow winner, 2017 October,
+              Moscow, RU
+            </p>
+            <br /><br />
+          </div>
+          <div class="text">
+            <h3>EXPO</h3>
+            <p>
+              Miami Art Basel – Gamma BTC Ordinals, 2023 December, Miami, US
+            </p>
+            <p>Object Permanence — Edition 5, 2020 June, Los Angeles, US</p>
+            <p>
+              Object Permanence — Charity Auction, 2020 March, Los Angeles, US
+            </p>
+            <p>
+              Rhett Baruch Art+Design — Out of The Blue, 2020 February, Los
+              Angeles, US
+            </p>
+            <p>Salone Del Mobile — SaloneSatellixste, 2018 April, Milan, IT</p>
+            <p>
+              Furniture Fair — Yves Klein collection, 2018 February, Stockholm,
+              SW
+            </p>
+            <p>
+              Salone Del Mobile — Perception recycling collection, 2017 October,
+              Moscow, RU
+            </p>
+            <p>
+              Salone Del Mobile — Ribbed bookcase and lamps collection, 2014
+              October, Moscow, RU
+            </p>
+            <p>
+              Moscow Design Week — Ribbed lamps collection, 2013 October,
+              Moscow, RU
+            </p>
+            <br /><br />
+          </div>
+          <div class="text">
+            <h3>REPRESENTATION</h3>
+            <p>W Los Angeles, Beverly Hills, US, 2023</p>
+            <p>A+D Museum, Los Angeles US, 2020</p>
+            <p>Mint Gallery, London UK, 2018</p>
+            <p>Rinascente, Milan IT, 2018</p>
+            <p>Mater Earth Gallery, Copenhagen DK, 2018</p>
+            <br /><br />
+          </div>
+          <div class="text">
+            <h3>PUBLICATIONS</h3>
+          </div>
+          <div class="link">
+            <div>
+              <a href="https://blockster.com/spotlight-on-nome-bridging-art-bitcoin-and-education-in-a-decentralized-community"
+                target="_blank">NōME: Bridging Art, Bitcoin, and Education | Blockster, 2023</a>
+            </div>
+            <div>
+              <a href="https://www.interior.ru/design/6395-valeriya-sergienko-russkij-dizajn-iz-stokgolma.html"
+                target="_blank">Russian Design from Stockholm | Interior + Design, 2020</a>
+            </div>
+            <div>
+              <a href="https://www.interior.ru/design/6979-place-1409-iskusstvo-moda-i-dizajn.html"
+                target="_blank">PLACE(1409): art, fashion, and design | Interior + Design,
+                2019</a>
+            </div>
+            <div>
+              <a href="http://low-tech.ru/context/valeria-sergienko-history/" target="_blank">Experiments and
+                self-searching | Low-Tech Design, 2019</a>
+            </div>
+            <div>
+              <a href="https://www.buro247.ru/fashion/trends/9-sep-2019-place-1409.html" target="_blank">The 5 amazing
+                new brands | Buro 247, 2019</a>
+            </div>
+            <div>
+              <a href="https://www.designcommunication.net/news/the-best-place-to-meet-and-buy-the-designs-of-tomorrow"
+                target="_blank">Waste as raw material | Design Communication, 2018
+              </a>
+            </div>
+            <br /><br /><br /><br /><br />
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="intro">
+          <br />
+          <h1>• NōME Gallery •</h1>
+          <br />
+          <div class="social-links">
+            <div><a href="/gallery">Luxury BTC ART Gallery </a></div>
+          </div>
+          <div class="text">
+            <p>
+              The space for unique digital art experiences with the the best
+              services and tools for 1/1 artists and premium brands to create
+              art on Bitcoin Ordinals. NōME is the world's first Ordinals Art
+              Gallery on Bitcoin that showcases the works of some of the best
+              contemporary artists of today. Our mission is to support digital
+              artists of various art styles and help them share their visionary
+              creations with audiences by staying at the forefront of
+              innovation.
+            </p>
+            <br /><br /><br />
+          </div>
+          <div class="photo">
+            <img src="../assets/images/main/890.png" /><br /><br /><br /><br />
+          </div>
+          <!--.social-links     div
+ a(href=" https://www.foundation.app/@nome/" target="_blank") Foundation
+div
+ a(href="https://opensea.io/nome_nft" target="_blank") OpenSea
+<br><br>
+div
+  a(href="https://www.instagram.com/nome_nft/" target="_blank") Instagram 
+div
+  a(href=" https://www.twitter.com/nome_nft/" target="_blank") Twitter   
+ 
 
-            <div class="animate-big mt-2">
-              <a
-                class="menu-link-txt-footer"
-                target="_blank"
-                href="https://discord.gg/ffZKc2TfN4"
-                >Discord</a
-              >
+
+-->
+        </div>
+        <br /><br /><br /><br />
+        <div class="side-column-box">
+          <div class="side-column">
+            <div class="social-links" style="margin-top: -19px">
+              <div>
+                <a href=" https://www.twitter.com/nome_nft/" target="_blank">Twitter
+                </a>
+              </div>
+              <div>
+                <a href="https://discord.gg/ffZKc2TfN4" target="_blank">Discord
+                </a>
+              </div>
+              <!--diva(href="http://t.me/nomewtf" target="_blank") Telegram-->
             </div>
           </div>
         </div>
       </div>
-      <div class="w-100 d-flex justify-between mt-5 pt-5 pb-4">
-        <div class="pr-5">• it is not about me •</div>
-        <div class="menu-link pl-5">
-          <a class="" target="_blank" href="https://nome.wtf/"
-            ><div class="menu-link-txt animate-big">nome.wft</div></a
-          >
+    </main>
+    <!-- Root element of PhotoSwipe. Must have class pswp.-->
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+      <!--Background of PhotoSwipe.
+It's a separate element as animating opacity is faster than rgba().-->
+      <div class="pswp__bg"></div>
+      <!-- Slides wrapper with overflow:hidden.-->
+      <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+          <div class="pswp__item"></div>
+          <div class="pswp__item"></div>
+          <div class="pswp__item"></div>
         </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed.-->
+        <div class="pswp__ui pswp__ui--hidden">
+          <div class="pswp__top-bar">
+            <!-- Controls are self-explanatory. Order can be changed.-->
+            <div class="pswp__counter"></div>
+            <button class="pswp__button pswp__button--close" title="Close (Esc)"></button><button
+              class="pswp__button pswp__button--share" title="Share"></button><button
+              class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button><button
+              class="pswp__button pswp__button--zoom"
+              title="Zoom in/out"></button><!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR--><!-- element will get class pswp__preloader--active when preloader is running-->
+            <div class="pswp__preloader">
+              <div class="pswp__preloader__icn">
+                <div class="pswp__preloader__cut">
+                  <div class="pswp__preloader__donut"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+            <div class="pswp__share-tooltip"></div>
+          </div>
+          <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button><button
+            class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+          <div class="pswp__caption">
+            <div class="pswp__caption__center"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Root element of PhotoSwipe. Must have class pswp.-->
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+      <!--Background of PhotoSwipe.
+It's a separate element as animating opacity is faster than rgba().-->
+      <div class="pswp__bg"></div>
+      <!-- Slides wrapper with overflow:hidden.-->
+      <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+          <div class="pswp__item"></div>
+          <div class="pswp__item"></div>
+          <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed.-->
+        <div class="pswp__ui pswp__ui--hidden">
+          <div class="pswp__top-bar">
+            <!-- Controls are self-explanatory. Order can be changed.-->
+            <div class="pswp__counter"></div>
+            <button class="pswp__button pswp__button--close" title="Close (Esc)"></button><button
+              class="pswp__button pswp__button--share" title="Share"></button><button
+              class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button><button
+              class="pswp__button pswp__button--zoom"
+              title="Zoom in/out"></button><!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR--><!-- element will get class pswp__preloader--active when preloader is running-->
+            <div class="pswp__preloader">
+              <div class="pswp__preloader__icn">
+                <div class="pswp__preloader__cut">
+                  <div class="pswp__preloader__donut"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+            <div class="pswp__share-tooltip"></div>
+          </div>
+          <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button><button
+            class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+          <div class="pswp__caption">
+            <div class="pswp__caption__center"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="menu-item projects-menu-item">
+        <div class="menu-link">About</div>
+      </div>
+      <div class="menu-item contact-menu-item">
+        <div class="menu-link"><a href="/art">Art</a></div>
+      </div>
+      <div class="menu-item servises-menu-item">
+        <div class="menu-link"><a href="/design">Design</a></div>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import { getAddress, sendBtcTransaction } from "sats-connect";
-
-// import axios from "axios";
-// import sha256 from 'crypto-js/sha256';
-import { event } from "vue-gtag";
-import imageCompressor from "vue-image-compressor";
-import { available_rarity } from '@/constants/rarity';
-export default {
-  name: "Home",
-  data() {
-    return {
-      quantity: 1,
-      selectedRar: 0,
-      rarity: available_rarity,
-      img: "",
-      scale: 100,
-      quality: 100,
-      originalSize: true,
-      files: [],
-      original: {},
-      compressed: {},
-      showGIF: false,
-      ispopUp: false,
-      interval: "",
-      address: "",
-      selectedItetem: [],
-      selectedItemIsShow: false,
-      ordinalAddress: "",
-      BASE_URL: "https://iam.nome.wtf/api.php?api=",
-      //BASE_URL:"http://localhost/nomeServer/api.php?api=",
-      BASE_URL1: "https://api.ordinalsbot.com/order",
-      result: "",
-      search: [],
-      isHero: false,
-      isUnis: false,
-      isXV: true,
-      indexes: [],
-      climingMSG: "",
-      level: 0,
-      ref: 0,
-      index: -1,
-      times: [
-        1000, 0, 1000, 1000, 0, 1000, 1000, 0, 1000, 1000, 0, 0, 1000, 1000, 0,
-        1000, 0, 1000, 0, 1000,
-      ],
-      currentInDisplay: 0,
-    };
-  },
-  props: {},
-  components: { imageCompressor },
-  mounted() {},
-  methods: {
-    async runImageDisplayCycle() {
-      const images = this.$el.querySelector(".grid-container").children;
-      while (true) {
-        const currentImage = images.item(this.currentInDisplay);
-        const previousImage = images.item(
-          (this.currentInDisplay || images.length) - 1
-        );
-        await this.delay(this.times[this.currentInDisplay] || 1000);
-        previousImage.style.setProperty("display", "none");
-        currentImage.style.setProperty("display", "block");
-        if (this.currentInDisplay === images.length - 1) {
-          this.currentInDisplay = 0;
-        } else {
-          this.currentInDisplay += 1;
-        }
-      }
-    },
-    delay(ms) {
-      return new Promise((res) => setTimeout(res, ms));
-    },
-    generateGIF() {
-      if (this.files.length == 0) {
-        return;
-      }
-      this.showGIF = true;
-      this.runImageDisplayCycle();
-    },
-    async sentBtc() {
-      const sendBtcOptions = {
-        payload: {
-          network: {
-            type: "Testnet",
-          },
-          recipients: [
-            {
-              address: "2NBC9AJ9ttmn1anzL2HvvVML8NWzCfeXFq4",
-              amountSats: BigInt(1500),
-            },
-            {
-              address: "2NFhRJfbBW8dhswyupAJWSehMz6hN5LjHzR",
-              amountSats: BigInt(1500),
-            },
-          ],
-          senderAddress: this.address,
-        },
-        onFinish: (response) => {
-          alert(response);
-        },
-        onCancel: () => alert("Canceled"),
-      };
-
-      await sendBtcTransaction(sendBtcOptions);
-    },
-    // async sentBtc1(){
-    //   const NETWORK = {
-    //     bech32: "bc",
-    //     pubKeyHash: 0x00,
-    //     scriptHash: 0x05,
-    //     wif: 0x80,
-    //   };
-
-    //   try {
-    //     if (this.address && this.publicKey) {
-
-    //       const utxos = await getUnspent(address);
-
-    //       let inputs = [];
-    //       let inputCount = 1;
-    //       let outputCount = 1;
-
-    //       const output = utxos[0];
-
-    //       const xversePublicKey = hex.decode(publicKey);
-    //       const tx = new btc.Transaction();
-
-    //       const p2wpkh2 = btc.p2wpkh(xversePublicKey, NETWORK);
-    //       const p2sh = btc.p2sh(p2wpkh2, NETWORK);
-
-    //       const transactionSize =
-    //           inputCount * 146 + outputCount * 34 + 10 - inputCount;
-
-    //       let feeRate = 6;
-    //       const responseFees = await axios.get(
-    //           "https://mempool.space/api/v1/fees/recommended"
-    //       );
-    //       if (responseFees?.data) {
-    //         feeRate = responseFees.data.halfHourFee;
-    //       }
-
-    //       const fee = transactionSize * feeRate;
-
-    //       if (BigInt(output.value) - BigInt(fee) - BigInt(mintPrice) < 0) {
-    //         setErrorTx("Balance is too low for this transaction");
-    //         throw new Error("Balance is too low for this transaction");
-    //       }
-
-    //       tx.addInput({
-    //         txid: output.txid,
-    //         index: output.vout,
-    //         witnessUtxo: {
-    //           script: p2sh.script ? p2sh.script : Buffer.alloc(0),
-    //           amount: BigInt(output.value),
-    //         },
-    //         redeemScript: p2sh.redeemScript ? p2sh.redeemScript : Buffer.alloc(0),
-    //         witnessScript: p2sh.witnessScript,
-    //         sighashType:
-    //             btc.SignatureHash.SINGLE | btc.SignatureHash.ANYONECANPAY,
-    //       });
-
-    //       const walletFund =
-    //           process.env.NEXT_PUBLIC_WALLET_FUND ?? "fallback-value";
-
-    //       tx.addOutputAddress(walletFund, BigInt(mintPrice), NETWORK);
-    //       tx.addOutputAddress(
-    //           address,
-    //           BigInt(output.value - fee - mintPrice),
-    //           NETWORK
-    //       );
-
-    //       const psbt = tx.toPSBT(0);
-    //       const psbtB64 = base64.encode(psbt);
-
-    //       const signPsbtOptions = {
-    //         payload: {
-    //           network: {
-    //             type: "Mainnet" ,
-    //           },
-    //           message: "Sign Transaction",
-    //           psbtBase64: psbtB64,
-    //           broadcast: true,
-    //           inputsToSign: [
-    //             {
-    //               address: address,
-    //               signingIndexes: [0],
-    //               sigHash:
-    //                   btc.SignatureHash.SINGLE | btc.SignatureHash.ANYONECANPAY,
-    //             },
-    //           ],
-    //         },
-    //         onFinish: async (response) => {
-    //           console.log(response);
-
-    //           if (address && addressOrdinal) {
-    //             const order = await createOrdinalOrder({
-    //               txPaymentId: response.txId,
-    //               wallet: address,
-    //               walletOrdinal: addressOrdinal,
-    //             });
-    //             setOrder(order);
-    //           }
-    //         },
-    //         onCancel: () => alert("Canceled"),
-    //       };
-    //       await signTransaction(signPsbtOptions);
-    //     }
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // },
-    upload() {
-      if (this.index <= 9) {
-        this.index++;
-      }
-
-      let compressor = this.$refs.compressor.$el;
-      compressor.click();
-    },
-
-    getFiles(obj) {
-      console.log(obj);
-      this.files[this.index] = {};
-      if (obj.compressed.base64 == "data:,") {
-        this.files[this.index].img = obj.original.base64;
-        this.files[this.index].original = obj.original;
-        this.files[this.index].compressed = obj.compressed;
-      } else {
-        this.files[this.index].img = obj.compressed.base64;
-        this.files[this.index].original = obj.original;
-        this.files[this.index].compressed = obj.compressed;
-      }
-      this.level = 1;
-      // this.changePopup(true)
-    },
-
-    changePopup(status) {
-      if (this.files.length == 0) {
-        return;
-      }
-      if (status) {
-        event("enter" + status, { event_category: this.ref });
-        this.climingMSG = "";
-      }
-      this.ispopUp = status;
-    },
-    connect() {
-      this.wait();
-    },
-
-    async waitXV() {
-      event("start of xv", {
-        event_category: this.ref,
-      });
-      this.address = "";
-      // console.log("start xverse")
-      const getAddressOptions = {
-        payload: {
-          purposes: ["ordinals", "payment"],
-          message: "Address for receiving Ordinals and payments",
-          network: {
-            type: "Testnet",
-          },
-        },
-        onFinish: (response) => {
-          this.address = "";
-          response.addresses.forEach((item) => {
-            if (item.purpose == "ordinals") {
-              this.ordinalAddress = item.address;
-            } else if (item.purpose == "payment") {
-              this.address = item.address;
-            }
-          });
-          if (this.address) {
-            event("success of xv", {
-              event_label: this.address,
-              event_category: this.ref,
-            });
-            this.sentBtc();
-            // this.addWallet([this.original.base64],this.address)
-            // console.log(this.address)
-          } else {
-            this.isXV = false;
-          }
-        },
-        onCancel: () => console.log("Request canceled"),
-      };
-      try {
-        this.isXV = true;
-        await getAddress(getAddressOptions);
-        this.changePopup(false);
-      } catch (err) {
-        console.log("xverse err", err);
-        this.isXV = false;
-      }
-    },
-  },
-};
-</script>
-<style lang="scss" scoped>
-@function changeScreen($size) {
-  $result: 1;
-
-  $result: ($size * 1400)/ (1920 * 15);
-
-  @return $result;
-}
-.mx-width {
-  max-width: 470px;
-}
-.frame-box {
-  border: solid rgba(255, 255, 255, 0.2) 1px;
-}
-.input-title {
-  min-height: changeScreen(45) * 1rem;
-}
-.detail {
-  color: gray;
-}
-.input-box {
-  border: solid white 1px;
-  border-radius: 10px;
-  background: transparent;
-}
-.selected-input-box {
-  background: gray !important;
-}
-
-.footer {
-  padding: changeScreen(0) * 1rem changeScreen(25) * 1rem changeScreen(0) * 1rem
-    changeScreen(25) * 1rem;
-  font-size: 1.177rem;
-  //padding-top: 8rem;
-}
-
-.page-wrapper {
-  padding: changeScreen(25) * 1rem changeScreen(80) * 1rem changeScreen(25) *
-    1rem changeScreen(25) * 1rem;
-}
-.headerLogo {
-  width: 21vw;
-  min-width: changeScreen(150) * 1rem;
-  //; font-size: 6.5rem;margin-top: -1.75rem
-  margin-top: changeScreen(5) * 1rem;
-}
-.header {
-  min-height: changeScreen(240) * 1rem;
-}
-.menu-link {
-  //margin-right: changeScreen()*1rem;
-}
-.menu-link-txt-footer {
-  color: white;
-  text-decoration: underline;
-  font-style: normal;
-  text-underline-offset: 0.4rem;
-  //line-height: 1.882rem;
-  //line-height:1.883rem ;
-  font-size: 1.412rem;
-}
-.menu-link-txt {
-  color: white;
-  text-decoration: underline;
-  font-size: 1.177rem;
-  text-underline-offset: 0.4rem;
-  //line-height: 1.882rem;
-}
-.intro {
-  margin-top: changeScreen(6) * 1rem;
-}
-.intro-title {
-  line-height: 1.883rem;
-  font-size: 1.412rem;
-  //font-size: changeScreen(24)*1rem;
-  //line-height: changeScreen(32)*1rem;
-  padding-bottom: changeScreen(10) * 1rem;
-}
-.intro-box {
-  border-bottom: solid rgb(255 255 255 / 20%) 1px;
-}
-.intro-line-title {
-  position: absolute;
-  top: -1 * changeScreen(58.5) * 1rem;
-  right: changeScreen(275) * 1rem;
-  font-style: italic;
-  line-height: 1.883rem;
-  font-size: 1.412rem;
-}
-.intro-line-title-f {
-  position: absolute;
-  top: -1 * changeScreen(58.5) * 1rem;
-  right: changeScreen(275+55) * 1rem;
-  font-style: italic;
-  line-height: 1.883rem;
-  font-size: 1.412rem;
-}
-.square-gallery {
-  width: 50vw;
-  height: 50vw;
-  margin-top: changeScreen(90) * 1rem;
-  /*box-shadow: 0 2px 1px rgba(0, 0, 0, 0.09), 0 4px 2px rgba(0, 0, 0, 0.09), 0 8px 4px rgba(0, 0, 0, 0.09), 0 16px 8px rgba(0, 0, 0, 0.09), 0 32px 16px rgba(0, 0, 0, 0.09);*/
-  /*margin-bottom: 75px;*/
-}
-.third-explain {
-  margin-top: changeScreen(110) * 1rem;
-  width: 50vw;
-}
-.forth-explain {
-  margin-top: changeScreen(55) * 1rem;
-  width: 50vw;
-}
-.vw-50 {
-  width: 50vw;
-}
-.square {
-  width: changeScreen(30) * 1rem;
-}
-.square-line {
-  line-height: changeScreen(30) * 1rem;
-}
-.first-explain {
-  margin-top: changeScreen(85) * 1rem;
-  width: 50vw;
-}
-.second-explain {
-  margin-top: changeScreen(55) * 1rem;
-  width: 50vw;
-}
-.calim-title {
-  margin-top: changeScreen(115) * 1rem;
-  font-size: changeScreen(25) * 1rem;
-  font-weight: bold;
-}
-.btn-txt {
-  min-width: changeScreen(273) * 1rem;
-  padding: changeScreen(10) * 1rem changeScreen(0) * 1rem !important;
-  font-size: changeScreen(25) * 1rem;
-}
-.wallet-connection {
-  margin-top: changeScreen(30) * 1rem;
-  padding: changeScreen(10) * 1rem changeScreen(0) * 1rem !important;
-  font-size: changeScreen(25) * 1rem;
-}
-@media screen and (max-width: 960px) {
-  //.headerLogo{
-  //
-  //; font-size: 5.5rem;margin-top: -1.25rem
-  //  //margin-top:changeScreen(5)*1rem ;
-  //}
-  .intro-line-title {
-    right: changeScreen(20) * 1rem;
-  }
-  .intro-line-title-f {
-    right: changeScreen(20) * 1rem;
-  }
-}
-
-@media screen and (max-width: 550px) {
-  //.headerLogo{
-  //
-  //font-size: 4rem;margin-top: -1rem
-  //  //margin-top:changeScreen(5)*1rem ;
-  //}
-  .mt-small {
-    margin-top: changeScreen(340) * 1rem !important;
-  }
-  .vw-50 {
-    width: 80vw;
-  }
-  .square-gallery {
-    width: 80vw;
-    height: 80vw;
-    /*box-shadow: 0 2px 1px rgba(0, 0, 0, 0.09), 0 4px 2px rgba(0, 0, 0, 0.09), 0 8px 4px rgba(0, 0, 0, 0.09), 0 16px 8px rgba(0, 0, 0, 0.09), 0 32px 16px rgba(0, 0, 0, 0.09);*/
-    /*margin-bottom: 75px;*/
-  }
-  .third-explain {
-    width: 80vw;
-  }
-  .forth-explain {
-    width: 80vw;
-  }
-  .first-explain {
-    width: 80vw;
-  }
-  .second-explain {
-    width: 80vw;
-  }
-}
-.main-err {
-  top: changeScreen(40) * 1rem;
-}
-.footer .intro {
-  padding-bottom: 2.6rem;
-}
-</style>
-<style>
-.video-container {
-  position: relative;
-  width: 80%;
-  padding-bottom: 41.8%; /* 16:9 */
-  height: 0;
-}
-.video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.nome:hover {
-  color: white;
-}
-</style>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.selected-box {
-  opacity: 1;
-  background-color: #ff82a9;
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-.btn-connect {
-  background-color: white;
-  color: black;
-  padding: 5px;
-  cursor: pointer !important;
-  z-index: 9;
-  border-radius: 10px;
-}
-.err {
-  height: 30px;
-  color: red;
-}
-.br-c {
-  border-right: solid dodgerblue 0.5px;
-}
-.bb-c {
-  border-bottom: solid dodgerblue 0.5px;
-}
-.text-numb {
-  color: white;
-}
-
-*,
-:after,
-:before {
-  box-sizing: border-box;
-  border: 0 solid #eee;
-}
-:after,
-:before {
-  --tw-content: "";
-}
-h2 {
-  font-size: inherit;
-  font-weight: inherit;
-}
-a {
-  color: inherit;
-  text-decoration: inherit;
-}
-h2,
-p {
-  margin: 0;
-}
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-:disabled {
-  cursor: default;
-}
-img {
-  display: block;
-  vertical-align: middle;
-}
-/*img{max-width:100%;height:auto;}*/
-*,
-:after,
-:before {
-  --tw-border-spacing-x: 0;
-  --tw-border-spacing-y: 0;
-  --tw-translate-x: 0;
-  --tw-translate-y: 0;
-  --tw-rotate: 0;
-  --tw-skew-x: 0;
-  --tw-skew-y: 0;
-  --tw-scale-x: 1;
-  --tw-scale-y: 1;
-  --tw-scroll-snap-strictness: proximity;
-  --tw-ring-offset-width: 0px;
-  --tw-ring-offset-color: #fff;
-  --tw-ring-color: rgba(33, 150, 243, 0.5);
-  --tw-ring-offset-shadow: 0 0 #0000;
-  --tw-ring-shadow: 0 0 #0000;
-  --tw-shadow: 0 0 #0000;
-  --tw-shadow-colored: 0 0 #0000;
-}
-.absolute {
-  position: absolute;
-}
-.relative {
-  position: relative;
-}
-.left-0 {
-  left: 0;
-}
-.right-4 {
-  right: 1rem;
-}
-.top-0 {
-  top: 0;
-}
-.top-3 {
-  top: 0.75rem;
-}
-.z-50 {
-  z-index: 50;
-}
-.mb-0\.5 {
-  margin-bottom: 0.125rem;
-}
-.ml-0\.5 {
-  margin-left: 0.125rem;
-}
-.mt-1 {
-  margin-top: 0.25rem;
-}
-.mt-2 {
-  margin-top: 0.5rem;
-}
-.inline-block {
-  display: inline-block;
-}
-.flex {
-  display: flex;
-}
-.h-14 {
-  height: 3.5rem;
-}
-.h-3\.5 {
-  height: 0.875rem;
-}
-.h-7 {
-  height: 1.75rem;
-}
-.h-full {
-  height: 100%;
-}
-.h-screen {
-  height: 100vh;
-}
-.w-3\.5 {
-  width: 0.875rem;
-}
-.w-7 {
-  width: 1.75rem;
-}
-.w-full {
-  width: 100%;
-}
-.w-screen {
-  width: 100vw;
-}
-.cursor-pointer {
-  cursor: pointer;
-}
-.flex-col {
-  flex-direction: column;
-}
-.items-center {
-  align-items: center;
-}
-.justify-center {
-  justify-content: center;
-}
-.justify-between {
-  justify-content: space-between;
-}
-.gap-0\.5 {
-  gap: 0.125rem;
-}
-.gap-3 {
-  gap: 0.75rem;
-}
-.rounded-full {
-  border-radius: 9999px;
-}
-.rounded-md {
-  border-radius: 0.375rem;
-}
-.border-b {
-  border-bottom-width: 1px;
-}
-.bg-black {
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
-}
-.bg-white {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-.bg-yellow-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(247 147 26 / var(--tw-bg-opacity));
-}
-.bg-opacity-80 {
-  --tw-bg-opacity: 0.8;
-}
-.object-cover {
-  -o-object-fit: cover;
-  object-fit: cover;
-}
-.px-2 {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-.px-3 {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-}
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-.py-1 {
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-}
-.py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-.pb-4 {
-  padding-bottom: 1rem;
-}
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-.text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-}
-.text-xs {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-.font-bold {
-  font-weight: 700;
-}
-.font-medium {
-  font-weight: 500;
-}
-.leading-5 {
-  line-height: 1.25rem;
-}
-.leading-none {
-  line-height: 1;
-}
-.text-gray-600 {
-  --tw-text-opacity: 1;
-  color: rgb(117 117 117 / var(--tw-text-opacity));
-}
-.text-gray-700 {
-  --tw-text-opacity: 1;
-  color: rgb(97 97 97 / var(--tw-text-opacity));
-}
-.text-gray-800 {
-  --tw-text-opacity: 1;
-  color: rgb(66 66 66 / var(--tw-text-opacity));
-}
-.text-gray-900 {
-  --tw-text-opacity: 1;
-  color: rgb(49 49 49 / var(--tw-text-opacity));
-}
-.text-white {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-.shadow-md {
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-.shadow-md {
-  --tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color),
-    0 2px 4px -2px var(--tw-shadow-color);
-}
-* {
-  box-sizing: border-box;
-}
-.hover\:bg-gray-100:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(245 245 245 / var(--tw-bg-opacity));
-}
-.hover\:text-gray-900:hover {
-  --tw-text-opacity: 1;
-  color: rgb(49 49 49 / var(--tw-text-opacity));
-}
-@media (min-width: 768px) {
-  .md\:h-fit {
-    height: -moz-fit-content;
-    height: fit-content;
-  }
-  .md\:w-96 {
-    width: 24rem;
-  }
-  .md\:w-fit {
-    width: -moz-fit-content;
-    width: fit-content;
-  }
-  .md\:rounded-md {
-    border-radius: 0.375rem;
-  }
-}
-
-/*p {*/
-/*  margin-bottom: 25px;*/
-/*}*/
-
-.image-info {
-  margin: 15px 0;
-}
-
-.separator {
-  margin: 0 5px;
-}
-
-input {
-  width: 75%;
-  display: block;
-  padding: 5px;
-  text-align: center;
-  margin-bottom: 10px;
-  max-width: 250px;
-  border: 2px solid #ddd;
-}
-*:focus {
-  outline: none;
-}
-/*input:focus {*/
-/*  border: 2px solid blue;*/
-/*}*/
-
-.compressor {
-  display: none;
-}
-
-.button {
-  display: inline-block;
-  border-radius: 3px;
-  background: #1a237e;
-  color: white;
-  padding: 7px 15px;
-  border: 0;
-  box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.4);
-  margin-bottom: 10px;
-  cursor: pointer;
-  outline: none;
-  text-decoration: none;
-}
-
-label {
-  margin-bottom: 10px;
-  display: block;
-}
-
-.input-group {
-  margin: 25px 0;
-}
-
-.checkbox {
-  margin: 15px 0 20px;
-  background: #eee;
-  padding: 10px 0;
-}
-
-.checkbox input {
-  width: auto;
-  display: inline-block;
-}
-
-img {
-  margin: 0 auto;
-  display: block;
-}
-
-a {
-  margin: 25px 0 75px;
-}
-
-.grid-container {
-  /* display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  gap: 0px 0px;
-  grid-template-areas:
-    ". . . . ."
-    ". . . . ."
-    ". . . . ."
-    ". . . . .";
-  width: 100%; */
-}
-
-.grid-item {
-  background-position: 50% 50% !important;
-  background-repeat: no-repeat !important;
-  background-size: contain !important;
-
-  width: 100%;
-  height: 100%;
-}
-.styles-module_blinkingCursor__yugAC {
-  color: inherit;
-  font: inherit;
-  left: 3px;
-  line-height: inherit;
-  opacity: 1;
-  position: relative;
-  top: 0;
-}
-
-.styles-module_blinking__9VXRT {
-  animation-duration: 0.8s;
-  animation-iteration-count: infinite;
-  animation-name: styles-module_blink__rqfaf;
-}
-
-@keyframes styles-module_blink__rqfaf {
-  0% {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-</style>
-

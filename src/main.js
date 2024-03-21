@@ -1,10 +1,31 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from "vue";
+import { createRouter, createWebHistory } from "vue-router";
+import Home from "./components/Home.vue";
+import Design from "./components/Design.vue";
+import Art from "./components/Art.vue";
+import App from "./App.vue";
 
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: "/",
+      component: Home,
+    },
 
-import VueGtag from "vue-gtag";
+    {
+      path: "/design",
+      component: Design,
+    },
+    {
+      path: "/art",
+      component: Art,
+    },
+  ],
+});
 
+const app = createApp(App);
 
-const app = createApp(App).use(VueGtag, {
-   config: { id: "G-HZQ4TKL9G9" }
-}).mount('#app')
+app.use(router);
+
+app.mount("#app");
